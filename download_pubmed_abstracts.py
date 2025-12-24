@@ -108,7 +108,9 @@ class PubMedDownloader:
         """
         all_records = []
         
-        for i in range(0, len(pmids), batch_size):
+        num_batches = (len(pmids) + batch_size - 1) // batch_size
+        
+        for i in tqdm(range(0, len(pmids), batch_size), total=num_batches, desc="Fetching batches"):
             batch = pmids[i:i + batch_size]
             time.sleep(self.request_delay)
             
@@ -258,13 +260,7 @@ class PubMedDownloader:
         print(f"\nDownloading {len(pmids)} abstracts...")
         
         # Fetch abstracts in batches
-        records = []
-        batch_size = 200
-        
-        for i in tqdm(range(0, len(pmids), batch_size), desc="Fetching batches"):
-            batch = pmids[i:i + batch_size]
-            batch_records = self.fetch_abstracts_batch(batch, batch_size)
-            records.extend(batch_records)
+        records = self.fetch_abstracts_batch(pmids, batch_size=200)
         
         # Process abstracts
         abstracts = []

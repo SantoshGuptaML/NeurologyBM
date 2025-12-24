@@ -231,7 +231,8 @@ class PMCDownloader:
                         f.write(content)
                         
             elif format == "pdf":
-                # Try to download PDF from PMC FTP
+                # Try to download PDF from PMC
+                # Ensure we have the numeric ID without PMC prefix
                 pmc_id_clean = pmc_id.replace("PMC", "")
                 pdf_url = f"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC{pmc_id_clean}/pdf/"
                 response = requests.get(pdf_url, timeout=30)
